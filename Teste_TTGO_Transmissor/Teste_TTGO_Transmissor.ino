@@ -32,7 +32,7 @@ StaticJsonDocument<capacity> doc;
 SX1276 radio = new Module(LoRa_nss, LoRa_dio1, LoRa_nrst);
 
 //Define o OLED
-U8G2_SSD1306_128X64_NONAME_1_SW_I2C u8g2(U8G2_R0, /* clock=*/oled_scl, /* data=*/oled_sda, /* reset=*/oled_rst);
+U8G2_SSD1306_128X64_NONAME_1_SW_I2C u8g2(U8G2_R0, oled_scl, oled_sda, oled_rst);
 
 //Protótipo da função de enviar
 void sendPacket();
@@ -58,8 +58,12 @@ void sendPacket()
   doc["EixoZ"] = eixoZ;
   doc["Alarme"] = trigger;
 
-  int statusr = radio.transmit("Hello");
-  Serial.println(doc.as<String>());
+  String msg;
+
+  serializeJsonPretty(doc, msg);
+
+  int statusr = radio.transmit(msg);
+  Serial.println(msg);
 }
 
 /******************* função principal (setup) *********************/
@@ -71,6 +75,7 @@ void setup()
   SPI.begin(LoRa_SCK, LoRa_MISO, LoRa_MOSI, LoRa_nss);
   u8g2.begin();
   radio.begin();
+  radio.setFrequency(434);
   
   //pinMode(LED,OUTPUT); //inicializa o LED
 
