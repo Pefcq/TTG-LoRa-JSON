@@ -25,7 +25,7 @@ int counter = 0;
 String str;
 
 //Serial Json
-const int capacity = JSON_OBJECT_SIZE(4);
+const int capacity = JSON_OBJECT_SIZE(5);
 StaticJsonDocument<capacity> doc;
 
 // Define o radio
@@ -57,6 +57,7 @@ void sendPacket()
   doc["EixoY"] = eixoY;
   doc["EixoZ"] = eixoZ;
   doc["Alarme"] = trigger;
+  doc["Packet"] = counter;
 
   String msg;
 
@@ -95,7 +96,6 @@ void loop()
 { 
   Serial.println("Enviando");
   Serial.print(counter);
-  Serial.print("😊");
   Serial.println("");
 
   u8g2.firstPage();
